@@ -7,7 +7,7 @@ let country = document.querySelector(".country")
 
 // API anrop
 function fetchData() {
-  fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchBar.value}&appid=f8ea10d3a094f9396fb9b3d58618d731`) // skickar ett anrop till API servern som svarar med ett löfte tillbaka
+  fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchBar.value}&appid=f8ea10d3a094f9396fb9b3d58618d731`) // skickar ett anrop till API servern som svarar med header tillbaka
   .then(response => response.json()) // Om löftet från header är uppfyllt körs funktionen som retunerar body i JSON format
   .then(data =>{   // Om löftet från body är uppfyllt och blivit parsed, körs funktionen som hanterar data i JSON.
     lat = data[0].lat // Hämtar ut värdet och anger den till lat
@@ -17,6 +17,7 @@ function fetchData() {
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=f8ea10d3a094f9396fb9b3d58618d731&units=metric`) // Om data från föregående anrop lyckats och är tillgängligt, körs en ny fetch med lat och lon från den stad användaren har angett 
     .then(response => response.json())      // (läs rad 11)
       .then(data => {      // (Läs rad 12)
+        console.log(data);
         weatherStatus.innerHTML = data.weather[0].description // (Läs rad 15)
         temp.innerHTML = data.main.temp.toFixed(0)+"°C" // (Läs rad 15)
         if(data.weather[0].main == "Clear"){
@@ -27,11 +28,11 @@ function fetchData() {
           document.body.style.backgroundImage = "url(img/clouds-49520_960_720.jpg)"
           document.body.className = "imageStyle"
         }                                                                                       // if satser som väljer rätt blid efter väder status.
-        if(data.weather[0].description == "Snow"){
+        if(data.weather[0].main == "Snow"){
           document.body.style.backgroundImage = "url(img/winter-landscape-4532412_960_720.jpg)"
           document.body.className = "imageStyle"
         }
-        if(data.weather[0].description == "Rain", "Drizzle"){
+        if(data.weather[0].main == "Rain"){
           document.body.style.backgroundImage = "url(img/row-boats-2264338_960_720.jpg)"
           document.body.className = "imageStyle"
         } 
